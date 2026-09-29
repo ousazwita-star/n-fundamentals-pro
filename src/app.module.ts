@@ -29,7 +29,7 @@ import configuration from './config/configuration.js';
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     SongsModule, UsersModule, PlaylistModule, ArtistsModule, AuthModule
-  ],
+  ], 
   controllers: [AppController],
   providers: [AppService],
 })
