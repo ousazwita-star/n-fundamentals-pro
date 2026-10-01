@@ -10,9 +10,6 @@ export class CreateUserDTO{
     @IsNotEmpty()
     lastName : string;
     
-    @IsString()
-    @IsNotEmpty()
-    apiKey : string;
 
     @IsString()
     @IsNotEmpty()

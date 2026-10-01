@@ -1,4 +1,10 @@
-import { MiddlewareConsumer, Module, NestModule, Next, RequestMethod } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  Next,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { SongsController } from './songs/songs.controller.js';
@@ -14,29 +20,33 @@ import { Playlist } from './playlist/playlist.entity.js';
 import { ArtistsModule } from './artists/artists.module.js';
 import { Artist } from './artists/artist.entity.js';
 import { AuthModule } from './auth/auth.module.js';
-import {JwtModule} from '@nestjs/jwt'
+import { JwtModule } from '@nestjs/jwt';
 import { dataSourceOptions, typeOrmAsyncConfig } from './db/data-source.js';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration.js';
-
+import { validate } from './env.validation.js';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [`.env.development`,`.env.production`],
+      envFilePath: [`${process.cwd()}/.env.${process.env.NODE_ENV}`],
       isGlobal: true,
-      load: [configuration]
+      load: [configuration],
+      validate: validate,
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
-    SongsModule, UsersModule, PlaylistModule, ArtistsModule, AuthModule
-  ], 
+    SongsModule,
+    UsersModule,
+    PlaylistModule,
+    ArtistsModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-
-export class AppModule implements NestModule{
-  constructor(datasource : DataSource){
-    console.log('Database Name is ==> ',datasource.driver.database);  
+export class AppModule implements NestModule {
+  constructor(datasource: DataSource) {
+    console.log('Database Name is ==> ', datasource.driver.database);
   }
 
   configure(consumer: MiddlewareConsumer) {
@@ -48,4 +58,4 @@ export class AppModule implements NestModule{
 
     consumer.apply(LoggerMiddleware).forRoutes(SongsController);
   }
-} 
+}
